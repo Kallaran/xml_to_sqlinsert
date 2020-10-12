@@ -5,54 +5,18 @@
 #include <errno.h>
 
 
-#define TAILLE_MAX 64
+#define TAILLE_MAX 2048
 
 
 
-
-
-
-//retourne le nombre de lignes que contient un fichier
-int nbr_lignes_fichier(FILE* fichier){
-	rewind(fichier);
-	int res = 0;
-	char chaine[TAILLE_MAX] ="";	
-	while(fgets(chaine, TAILLE_MAX, fichier) != NULL){
-		res = res + 1;
-	}
-	rewind(fichier);
-	return res;	
-}
-
-//retourne le nombre de caracteres du fichier 'fichier'
-int nbr_caracteres_fichier(FILE* fichier){
-	rewind(fichier);
-	int res = 0;
-	while(fgetc(fichier) != EOF){
-		res = res + 1;
-	}
-	rewind(fichier);
-	return res;
-}
-
-
-
-//ecrit la ligne numéro 'ligne' de 'source' dans 'match'
-void ecrire_ligne(FILE* source, FILE* match, int ligne){
-	char chaine[TAILLE_MAX] ="";	
-	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, source) != NULL;i++){
-		if(i==ligne){fprintf(match, "%s", chaine);}
-	}
-	rewind(source);
-}
 
 
 //rend la ligne : INSERT INTO "tatable" 
 void get_table(FILE* source, int ligne){
+	rewind(source);
+
 	char chaine[TAILLE_MAX] ="";	
-	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, source) != NULL;i++){
-		if(i==ligne){}
-	}
+	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, source) != NULL;i++){}
 	rewind(source);
 
 	int i = 0;
@@ -68,6 +32,93 @@ void get_table(FILE* source, int ligne){
 
 	printf( "INSERT INTO %s", chaine);
 }
+
+//retourne le nombre de lignes que contient un fichier
+int nbr_lignes_fichier(FILE* fichier){
+	rewind(fichier);
+	int res = 0;
+	char chaine[TAILLE_MAX] ="";	
+	while(fgets(chaine, TAILLE_MAX, fichier) != NULL){
+		res = res + 1;
+	}
+	rewind(fichier);
+	return res;	
+}
+
+void rm_space(char * chaine){
+	int i = 0;
+	while((chaine[i] != '\0') && (chaine[i] != ' ')){
+		i++;
+	}
+	if(chaine[i] == ' '){
+		while(chaine[i] != '\0'){
+			chaine[i] = chaine[i+1];
+			i++;
+		}
+		chaine[i-1] = '\0';
+	}
+}
+
+
+int ispace(char * chaine){
+	int i = 0;
+	while((chaine[i] != '\0') && (chaine[i] != ' ')){
+		i++;
+	}
+	return (chaine[i] == ' ');
+}
+
+//retourne le noms des colonnes de la premiere entree <row>
+void get_colname(FILE* fichier, int ligne){
+	rewind(fichier);
+	char chaine[TAILLE_MAX] ="";
+
+
+	//on se place sur la premiere ligne <row>
+	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){}
+
+	//on parcourt la ligne jusqu'a tomber sur '/>'
+	int i = 0;
+	while(i < 5){
+		chaine[i] = ' ';
+		i++;
+	}
+	chaine[i] = '"';
+	i++;
+
+	while(chaine[i] != '>' && chaine[i-1] != '/'){
+		if (chaine[i] == '"'){
+			i++;
+			while(chaine[i] != '"'){
+				chaine[i] = ' ';
+				i++;
+			}
+		}
+		i++;
+	}
+	chaine[i-3] = '\0';
+
+	//on reparcourt la ligne pour enlever les '='
+	i= 0;
+	while(chaine[i] != '\0'){
+		if((chaine[i] == '"') && (chaine[i-1] == '=')  ){
+			chaine[i-1] = ' ';
+		}
+		i++;
+	}
+
+	//on reparcourt la chaine pour enlever les ' ' 
+	while(ispace(chaine)){
+		rm_space(chaine);
+	}
+
+	printf("(%s)\n", chaine );
+
+
+	
+	rewind(fichier);
+}
+
 
 
 
@@ -126,6 +177,8 @@ int main(){
 	
 
 	get_table(xml, 1);
+
+	get_colname(xml, 2);
 
 		
 	
