@@ -107,12 +107,36 @@ void get_colname(FILE* fichier, int ligne){
 		i++;
 	}
 
+	//on rajoute les virgules
+	i= 0;
+	int second = 0;
+	while(chaine[i] != '\0'){
+		if((chaine[i] == '"')){
+			if(second){
+				chaine[i+1] = ',';
+				second = 0;
+			}else{
+				second = 1;
+			}
+		}
+		i++;
+	}
+
+
 	//on reparcourt la chaine pour enlever les ' ' 
 	while(ispace(chaine)){
 		rm_space(chaine);
 	}
 
-	printf("(%s)\n", chaine );
+	//on retire la virgule en trop
+	i=0;
+	while(chaine[i] != '\0'){
+		i++;
+	}
+	chaine[i-1] = ' ';
+	rm_space(chaine);
+
+	printf(" (%s)\n", chaine );
 
 
 	
