@@ -1,6 +1,9 @@
-INSERT INTO client (prenom, nom, ville, age)
+INSERT INTO "client" (prenom, nom, ville, age)
  VALUES
  ('Rébecca', 'Armand', 'Saint-Didier-des-Bois', 24),
  ('Aimée', 'Hebert', 'Marigny-le-Châtel', 36),
  ('Marielle', 'Ribeiro', 'Maillères', 27),
  ('Hilaire', 'Savary', 'Conie-Molitard', 58);
+
+ insert into "Users" ("Id", "Reputation") values (45,102);
+
