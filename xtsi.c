@@ -143,7 +143,87 @@ void get_colname(FILE* fichier, int ligne){
 	rewind(fichier);
 }
 
+//supprime tous les caractères jusqu'a un '"' et retourne sa position
+int rmtogui (char* chaine, int e){
 
+	int i =e;
+	while(chaine[i] != '"'){
+		chaine[i] = ' ';
+		i++;
+	}
+
+	return i;
+	
+}
+
+
+// donne la position du prochain guillemet
+int nextgui (char* chaine, int e){
+	int i = e;
+	while((chaine[i] != '"') ){
+		i++;
+	}
+	return i;
+	
+
+}
+
+//indique si il reste des guillemets dans la chaine
+int gui (char* chaine, int e){
+	int i = e;
+	while((chaine[i] != '\0') && (chaine[i] != '"') ){
+		i++;
+	}
+
+	return (chaine[i] == '"');
+}
+//affiche les valeurs
+void get_values (FILE* fichier, int ligne){
+	rewind(fichier);
+	char chaine[TAILLE_MAX] ="";
+
+	//on se place sur la  ligne <row> selectionnee
+	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){}
+
+
+
+	//on supprime tout ce qui n'est pas entre guillemet
+	int e = 0;
+	int a = 0;
+
+	while(gui(chaine, e)){
+
+		a = rmtogui(chaine, e);
+		e = a + 1;
+		if(gui(chaine, e)){
+			e = nextgui(chaine, a+1);
+			e++;
+			chaine[e] = ',';
+			e++;
+		}
+
+	}
+
+	//on supprime le bout de la fin
+	chaine[e-1] = '\0';
+
+
+	while(ispace(chaine)){
+		rm_space(chaine);
+	}	
+	
+	printf("VALUES \n" );
+	printf("(%s)\n", chaine );
+}
+/*
+void get_allvalues (FILE* fichier, int ligne){
+	//on se place sur la premiere ligne <row>
+	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){
+		get_values(fichier);
+	}
+
+}
+*/
 
 
 //place le curseur du fichier 'fichier' à la position 'position' souhaitee
@@ -203,6 +283,8 @@ int main(){
 	get_table(xml, 1);
 
 	get_colname(xml, 2);
+
+	get_values(xml, 2);
 
 		
 	
