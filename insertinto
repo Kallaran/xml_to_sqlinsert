@@ -5,5 +5,5 @@ INSERT INTO "client" (prenom, nom, ville, age)
  ('Marielle', 'Ribeiro', 'Maillères', 27),
  ('Hilaire', 'Savary', 'Conie-Molitard', 58);
 
- insert into "Users" ("Id", "Reputation") values (45,102);
+ insert into "users" ("Id", "Reputation") values ('45','102');
 

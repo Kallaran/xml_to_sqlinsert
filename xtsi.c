@@ -164,8 +164,6 @@ int nextgui (char* chaine, int e){
 		i++;
 	}
 	return i;
-	
-
 }
 
 //indique si il reste des guillemets dans la chaine
@@ -177,6 +175,77 @@ int gui (char* chaine, int e){
 
 	return (chaine[i] == '"');
 }
+
+
+//indique si il y a d'autres apostrophes
+int  ifquote(char* chaine, int e){
+	int i = e;
+	while((chaine[i] != '\0') && (chaine[i] != '\'') ){
+		i++;
+	}
+
+	return (chaine[i] == '\'');
+}
+
+
+// donne la position du prochain apostrophe
+int nextquote (char* chaine, int e){
+	int i = e;
+	while((chaine[i] != '\'') ){
+		i++;
+	}
+	return i;
+}
+
+// compte le nombre de char d une chaine
+int countcharstring(char* chaine){
+	int i =0;
+	while((chaine[i] != '\0') ){
+		i++;
+	}
+
+	printf("%d\n", i );
+	printf("%c\n", chaine[1]);
+	return i;
+}
+
+/*//decale une chaine pour inserer en e+1 une copie du caratere en e
+void poussechaine(char * chaine, char* chaineres, int e){
+	int a = 0;
+	for (int i = 0; i <= e; ++i){
+		chaineres[i] = chaine[i];
+		a = i;
+	}
+	chaineres[a+1] = chaine[a];
+
+	for(int i = a+1; chaine[i] != '\0';i++){
+		chaineres[i+1] = chaine[i];
+
+	}
+
+
+}
+
+*/
+
+//decale une chaine pour inserer en e+1 une copie du caratere en e
+void poussechaine(char * chaine, char* chaineres, int e, int b){
+	int a = 0;
+	for (int i = b; i <= e; ++i){
+		chaineres[i] = chaine[i];
+		a = i;
+	}
+	chaineres[a+1] = chaine[a];
+
+	for(int i = a+1; chaine[i] != '\0';i++){
+		chaineres[i+1] = chaine[i];
+
+	}
+
+
+}
+
+
 //affiche les valeurs
 void get_values (FILE* fichier, int ligne){
 	rewind(fichier);
@@ -195,6 +264,7 @@ void get_values (FILE* fichier, int ligne){
 
 		a = rmtogui(chaine, e);
 		e = a + 1;
+
 		if(gui(chaine, e)){
 			e = nextgui(chaine, a+1);
 			e++;
@@ -207,13 +277,55 @@ void get_values (FILE* fichier, int ligne){
 	//on supprime le bout de la fin
 	chaine[e-1] = '\0';
 
-
+	/*//on retire les espaces (probl : les espaces entre les guillemets sont aussi retires)
 	while(ispace(chaine)){
 		rm_space(chaine);
-	}	
+	}*/
+
 	
+	//on double quote les simples quote pour faire comprendre au sql que c est des simple quote
+	e = 0;
+	a = 0;
+
+
+	/*while(ifquote(chaine, e)){ //si quote alors :
+		a = nextquote(chaine, e); //on prend la position de la quote
+		decachaine(chaine, a);  //on decale tout le reste de la chaine pour inserer une autre quote
+		e = e + 2;
+
+	}*/
+	char chaineres[4096] ="";
+
+
+	/*if(ifquote(chaine, e)){
+		a = nextquote(chaine, e); //on prend la position de la quote
+		poussechaine(chaine, chaineres, a);
+	}*/
+
+	int b = 0;
+	int d =0;
+	while(ifquote(chaine, e)){
+		a = nextquote(chaine, e); //on prend la position de la quote
+		poussechaine(chaine, chaineres, a, b);
+		e = a+1;
+		d++;
+		b = e + d;
+	}
+
+
+
+	
+
+	//on remplace les guillemets pas des ''
+	for(int i = 0; chaineres[i] != '\0'; i++){
+		if(chaineres[i] == '"'){
+			chaineres[i] = '\'';
+		}
+	}
+	
+
 	printf("VALUES \n" );
-	printf("(%s)\n", chaine );
+	printf("(%s)\n", chaineres );
 }
 /*
 void get_allvalues (FILE* fichier, int ligne){
@@ -286,7 +398,10 @@ int main(){
 
 	get_values(xml, 2);
 
-		
+	char* troutrou = "troutrou";
+	char chaineres[67] ="";
+
+	//poussechaine(troutrou, chaineres, 3);
 	
 	
 
