@@ -57,13 +57,8 @@ int ispace(char * chaine){
 }
 
 //retourne le noms des colonnes de la premiere entree <row>
-void get_colname(FILE* fichier, int ligne){
-	rewind(fichier);
-	char chaine[TAILLE_MAX] ="";
+void get_colname(char* chaine){
 
-
-	//on se place sur la premiere ligne <row>
-	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){}
 
 	//on parcourt la ligne jusqu'a tomber sur '/>'
 	int i = 0;
@@ -127,9 +122,7 @@ void get_colname(FILE* fichier, int ligne){
 	printf(" (%s)\n", chaine );
 
 
-	
-	rewind(fichier);
-}
+	}
 
 //remplace tous les caractères par un espace jusqu'a un '"' et retourne sa position
 int rmtogui (char* chaine, int e){
@@ -274,7 +267,7 @@ void get_values (char* chaine, int ligne){
 	
 
 	printf("VALUES \n" );
-	printf("(%s)\n", chaineres );
+	printf("(%s);\n", chaineres );
 }
 
 //retourne le nombre de lignes que contient un fichier
@@ -290,19 +283,35 @@ int nbr_lignes_fichier(FILE* fichier){
 }
 
 
+//chaine2 devient une copie de chaine1
+void cpchaine(char* chaine1, char* chaine2){
+	for (int i = 0; chaine1[i] != '\0'; ++i)
+	{
+		chaine2[i] = chaine1[i];
+	}
+
+}
+
+
 
 void get_allvalues (FILE* fichier,char* intable, int e){
 	int ligne = nbr_lignes_fichier(fichier);
-	char chaine[TAILLE_MAX] ="";	
+	char chaine[TAILLE_MAX] ="";
+	char chainecol[TAILLE_MAX] ="";	
+
 
 	for(int i=1;i<ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){
 		if(i>e){
 			printf( "INSERT INTO %s ", intable);
+
+			cpchaine(chaine,chainecol);
+			get_colname(chainecol);
+
+
 			get_values(chaine, i);
 		}
 	}
 
-	printf("%d\n", ligne);
 
 }
 
@@ -327,11 +336,10 @@ int main(){
 	if(sql == NULL){perror ("error : fopen sql");return -1;}
 
 
-	//on recupere le nom de la table et on stock la chain INSERT INTO latable dans 'intable'
+	//on recupere le nom de la table et on stock la chaine INSERT INTO latable dans 'intable'
 	char intable[TAILLE_MAX] ="";
 	get_table(xml, intable, 1);
 
-	get_colname(xml, 2);
 
 	get_allvalues(xml, intable, 2);
 	
