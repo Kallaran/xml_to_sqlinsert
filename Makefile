@@ -1,5 +1,3 @@
-# Group : 3.1
-# Name 1 : DERIEUX Jean	
 
 EXEC= xtsi
 

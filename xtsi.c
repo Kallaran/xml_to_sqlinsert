@@ -293,13 +293,17 @@ int nbr_lignes_fichier(FILE* fichier){
 
 
 
-void get_allvalues (FILE* fichier){
+void get_allvalues (FILE* fichier, int e){
 	int ligne = nbr_lignes_fichier(fichier);
 	char chaine[TAILLE_MAX] ="";	
 
-	for(int i=3;i<ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){
-		get_values(chaine, i);
+	for(int i=1;i<ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){
+		if(i>e){
+			get_values(chaine, i);
+		}
 	}
+
+	printf("%d\n", ligne);
 
 }
 
@@ -333,7 +337,7 @@ int main(){
 
 	get_colname(xml, 2);
 
-	get_allvalues(xml);
+	get_allvalues(xml, 2);
 	
 	
 
