@@ -12,10 +12,9 @@
 
 
 //rend la ligne : INSERT INTO "tatable" 
-void get_table(FILE* source, int ligne){
+void get_table(FILE* source, char* chaine, int ligne){
 	rewind(source);
 
-	char chaine[TAILLE_MAX] ="";	
 	for(int i=0;i<=ligne && fgets(chaine, TAILLE_MAX, source) != NULL;i++){}
 	rewind(source);
 
@@ -30,7 +29,6 @@ void get_table(FILE* source, int ligne){
 	chaine[i] = '"';
 	chaine[i+1] = '\0';
 
-	printf( "INSERT INTO %s", chaine);
 }
 
 
@@ -293,12 +291,13 @@ int nbr_lignes_fichier(FILE* fichier){
 
 
 
-void get_allvalues (FILE* fichier, int e){
+void get_allvalues (FILE* fichier,char* intable, int e){
 	int ligne = nbr_lignes_fichier(fichier);
 	char chaine[TAILLE_MAX] ="";	
 
 	for(int i=1;i<ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){
 		if(i>e){
+			printf( "INSERT INTO %s ", intable);
 			get_values(chaine, i);
 		}
 	}
@@ -328,16 +327,13 @@ int main(){
 	if(sql == NULL){perror ("error : fopen sql");return -1;}
 
 
-
-
-						
-	
-
-	get_table(xml, 1);
+	//on recupere le nom de la table et on stock la chain INSERT INTO latable dans 'intable'
+	char intable[TAILLE_MAX] ="";
+	get_table(xml, intable, 1);
 
 	get_colname(xml, 2);
 
-	get_allvalues(xml, 2);
+	get_allvalues(xml, intable, 2);
 	
 	
 
