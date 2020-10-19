@@ -5,7 +5,9 @@
 #include <errno.h>
 
 
-#define TAILLE_MAX 2048
+#define TAILLE_MAX 4096
+#define TAILLE_MAX2  8192
+
 
 
 
@@ -96,7 +98,12 @@ void get_colname(char* chaine){
 	while(chaine[i] != '\0'){
 		if((chaine[i] == '"')){
 			if(second){
-				chaine[i+1] = ',';
+				if(chaine[i+1] == '"'){
+					chaine[i+1] = ',';
+					chaine[i+2] = '"';
+				}else{
+					chaine[i+1] = ',';
+				}
 				second = 0;
 			}else{
 				second = 1;
@@ -234,7 +241,7 @@ void get_values (char* chaine, int ligne){
 	//on double quote les simples quote pour faire comprendre au sql que c est des simple quote
 	e = 0;
 	a = 0;
-	char chaineres[4096] ="";
+	char chaineres[TAILLE_MAX2] ="";
 
 	if(ifquote(chaine,e)){
 		int b = 0;
