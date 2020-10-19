@@ -324,16 +324,14 @@ void get_allvalues (FILE* fichier,char* intable, int e){
 
 
 
-int main(){
+int main(int argc, char** argv){
 
 
 	FILE* xml = NULL;
-	xml = fopen("data/file.xml", "r");
-	if(xml == NULL){perror ("error : fopen xml");return -1;}
+	xml = fopen(argv[1], "r");
+	if(xml == NULL){perror ("error : fopen xml : please enter an xml file ! ");return -1;}
 	
-	FILE* sql = NULL;
-	sql = fopen("data/file.sql", "w+");
-	if(sql == NULL){perror ("error : fopen sql");return -1;}
+
 
 
 	//on recupere le nom de la table et on stock la chaine INSERT INTO latable dans 'intable'
@@ -350,7 +348,6 @@ int main(){
 
 	
 	if(fclose(xml) != 0){perror ("error : fclose file.xml");return -1;}
-	if(fclose(sql) != 0){perror ("error : fclose file.sql");return -1;}
 
 	return 0;
 }
