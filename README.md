@@ -5,3 +5,10 @@ puis de rendre un fichier contenant les donnees du fichier xml
 
 dans un format INSERT INTO
 capable donc de rajouter les donnees facilement dans une bdd
+
+
+sudo cp xtsi /usr/local/bin/xtsit
+
+xtsit Users100.xml > Users100.sql
+
+
