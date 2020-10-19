@@ -5,8 +5,8 @@
 #include <errno.h>
 
 
-#define TAILLE_MAX 4096
-#define TAILLE_MAX2  8192
+#define TAILLE_MAX 262144
+#define TAILLE_MAX2  524288
 
 
 
