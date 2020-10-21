@@ -304,7 +304,10 @@ void cpchaine(char* chaine1, char* chaine2){
 void get_allvalues (FILE* fichier,char* intable, int e, FILE* sql){
 	int ligne = nbr_lignes_fichier(fichier);
 	char chaine[TAILLE_MAX] ="";
-	char chainecol[TAILLE_MAX] ="";	
+	char chainecol[TAILLE_MAX] ="";
+	double poucent = 0;
+	double a = 0;
+	double b = ligne;
 
 
 	for(int i=1;i<ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){
@@ -317,6 +320,10 @@ void get_allvalues (FILE* fichier,char* intable, int e, FILE* sql){
 
 			get_values(chaine, i, sql);
 		}
+
+		a = i;
+		poucent =  ((a+1)/b)*100;
+		printf("%d / %d || %.2f %s \r", i+1 ,ligne, poucent, "%");
 	}
 
 
