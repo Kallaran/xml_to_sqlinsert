@@ -1,14 +1,19 @@
 # xml_to_sqlinsert
 
-l'objectif ici est de créer un executable capable de prendre en entrée un fichier xml
-puis de rendre un fichier contenant les donnees du fichier xml 
-
-dans un format INSERT INTO
-capable donc de rajouter les donnees facilement dans une bdd
+The goal is to convert an xml file into a sql request of the form INSERT INTO.
+The sql file can then be used to enter the data it contains into a database.
 
 
-sudo cp xtsi /usr/local/bin/xtsit
+## some commands
 
-xtsit Users100.xml > Users100.sql
+Add the executable to an environment variable :
+```
+sudo cp xtsi /usr/local/bin/xtsi
+```
+
+The command below converts an xml file to a sql file. Be careful if the sql file already exists it will be rewritten.
+```
+xtsi file.xml file.sql
+```
 
 
