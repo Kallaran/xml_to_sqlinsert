@@ -59,7 +59,7 @@ int ispace(char * chaine){
 }
 
 //retourne le noms des colonnes de la premiere entree <row>
-void get_colname(char* chaine){
+void get_colname(char* chaine, FILE* sql){
 
 
 	//on parcourt la ligne jusqu'a tomber sur '/>'
@@ -126,7 +126,7 @@ void get_colname(char* chaine){
 	chaine[i-1] = ' ';
 	rm_space(chaine);
 
-	printf(" (%s)\n", chaine );
+	fprintf(sql, " (%s)\n", chaine );
 
 
 	}
@@ -206,7 +206,7 @@ void poussechaine(char * chaine, char* chaineres, int e, int b){
 
 
 //affiche les valeurs
-void get_values (char* chaine, int ligne){
+void get_values (char* chaine, int ligne, FILE* sql){
 
 
 
@@ -265,7 +265,7 @@ void get_values (char* chaine, int ligne){
 
 	
 
-	//on remplace les guillemets pas des ''
+	//on remplace les guillemets pas des '
 	for(int i = 0; chaineres[i] != '\0'; i++){
 		if(chaineres[i] == '"'){
 			chaineres[i] = '\'';
@@ -273,8 +273,8 @@ void get_values (char* chaine, int ligne){
 	}
 	
 
-	printf("VALUES \n" );
-	printf("(%s);\n", chaineres );
+	fprintf(sql,"VALUES \n" );
+	fprintf(sql, "(%s);\n", chaineres );
 }
 
 //retourne le nombre de lignes que contient un fichier
@@ -301,7 +301,7 @@ void cpchaine(char* chaine1, char* chaine2){
 
 
 
-void get_allvalues (FILE* fichier,char* intable, int e){
+void get_allvalues (FILE* fichier,char* intable, int e, FILE* sql){
 	int ligne = nbr_lignes_fichier(fichier);
 	char chaine[TAILLE_MAX] ="";
 	char chainecol[TAILLE_MAX] ="";	
@@ -309,13 +309,13 @@ void get_allvalues (FILE* fichier,char* intable, int e){
 
 	for(int i=1;i<ligne && fgets(chaine, TAILLE_MAX, fichier) != NULL;i++){
 		if(i>e){
-			printf( "INSERT INTO %s ", intable);
+			fprintf(sql, "INSERT INTO %s ", intable);
 
 			cpchaine(chaine,chainecol);
-			get_colname(chainecol);
+			get_colname(chainecol, sql);
 
 
-			get_values(chaine, i);
+			get_values(chaine, i, sql);
 		}
 	}
 
@@ -337,6 +337,10 @@ int main(int argc, char** argv){
 	FILE* xml = NULL;
 	xml = fopen(argv[1], "r");
 	if(xml == NULL){perror ("error : fopen xml : please enter an xml file ! ");return -1;}
+
+	FILE* sql = NULL;
+	sql = fopen(argv[2], "w+");
+	if(sql == NULL){perror ("error : fopen sql : please enter a sql file  name ! ");return -1;}
 	
 
 
@@ -346,7 +350,7 @@ int main(int argc, char** argv){
 	get_table(xml, intable, 1);
 
 
-	get_allvalues(xml, intable, 2);
+	get_allvalues(xml, intable, 2, sql);
 	
 	
 
@@ -355,6 +359,7 @@ int main(int argc, char** argv){
 
 	
 	if(fclose(xml) != 0){perror ("error : fclose file.xml");return -1;}
+	if(fclose(sql) != 0){perror ("error : fclose file.sql");return -1;}
 
 	return 0;
 }
