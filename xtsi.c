@@ -368,6 +368,7 @@ int main(int argc, char** argv){
 	if(fclose(xml) != 0){perror ("error : fclose file.xml");return -1;}
 	if(fclose(sql) != 0){perror ("error : fclose file.sql");return -1;}
 
+	printf("%s\n", "Conversion completed successfully!" );
 	return 0;
 }
 
