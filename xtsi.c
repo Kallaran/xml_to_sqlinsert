@@ -165,7 +165,7 @@ int gui (char* chaine, int e){
 }
 
 
-//indique si il y a d'autres apostrophes
+//indique si il y a d'autres apostrophes à partir de la position e
 int  ifquote(char* chaine, int e){
 	int i = e;
 	while((chaine[i] != '\0') && (chaine[i] != '\'') ){
@@ -187,22 +187,6 @@ int nextquote (char* chaine, int e){
 
 
 
-//decale une chaine pour inserer en e+1 une copie du caratere en e
-void poussechaine(char * chaine, char* chaineres, int e, int b){
-	int a = 0;
-	for (int i = b; i <= e; ++i){
-		chaineres[i] = chaine[i];
-		a = i;
-	}
-	chaineres[a+1] = chaine[a];
-
-	for(int i = a+1; chaine[i] != '\0';i++){
-		chaineres[i+1] = chaine[i];
-
-	}
-
-
-}
 
 
 //affiche les valeurs
@@ -239,19 +223,35 @@ void get_values (char* chaine, int ligne, FILE* sql){
 
 	
 	//on double quote les simples quote pour faire comprendre au sql que c est des simple quote
-	e = 0;
-	a = 0;
+	int start = 0;
+	int posQuote = 0;
 	char chaineres[TAILLE_MAX2] ="";
 
-	if(ifquote(chaine,e)){
-		int b = 0;
-		int d =0;
-		while(ifquote(chaine, e)){
-			a = nextquote(chaine, e); //on prend la position de la quote
-			poussechaine(chaine, chaineres, a, b);
-			e = a+1;
-			d++;
-			b = e + d;
+	if(ifquote(chaine, start)){
+		int quoteadd = 0;
+		while(ifquote(chaine, start)){
+			posQuote = nextquote(chaine, start); //on prend la position de la quote
+
+
+
+			int a = 0;
+			for (int i = start; i <= posQuote; ++i){ 
+				chaineres[i+quoteadd] = chaine[i];
+				a = i;
+			}
+
+			quoteadd++;
+			chaineres[a+quoteadd] = chaine[a];
+
+			for(int i = a+1; chaine[i] != '\0';i++){
+				chaineres[i+quoteadd] = chaine[i];
+			}
+
+
+			start = posQuote +1;
+
+			
+		
 		}
 	}else{
 		for (int i = 0; chaine[i] != '\0'; ++i)
