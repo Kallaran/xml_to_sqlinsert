@@ -1,4 +1,4 @@
-# xml_to_sqlinsert
+# xml_to_sqlinsert  (xtsi)
 
 The goal is to convert an xml file into a sql request of the form INSERT INTO.
 
