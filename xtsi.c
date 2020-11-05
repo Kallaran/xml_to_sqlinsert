@@ -351,6 +351,7 @@ int main(int argc, char** argv){
 	
 
 
+	fprintf(sql,"BEGIN; \n" );
 
 	//on recupere le nom de la table et on stock la chaine INSERT INTO latable dans 'intable'
 	char intable[TAILLE_MAX] ="";
@@ -358,8 +359,11 @@ int main(int argc, char** argv){
 
 
 	get_allvalues(xml, intable, 2, sql);
+
 	
 	
+	fprintf(sql,"COMMIT; \n" );
+
 
 
 
